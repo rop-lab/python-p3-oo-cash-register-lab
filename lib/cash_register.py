@@ -5,23 +5,25 @@ class CashRegister:
         self.discount = discount
 
     def add_item(self, item, price, quantity=1):
-        self.items.append((item, price, quantity))
+        self.items.extend([item] * quantity)  # Use extend to add multiple items
         self.total += price * quantity
         return f"Added {quantity} {item}(s) to the cart. Total: ${self.total}"
 
     def apply_discount(self):
-        if self.discount:
+        if self.discount > 0:
             discount_amount = self.total * (self.discount / 100)
             self.total -= discount_amount
-            print(f"After the discount, the total comes to ${self.total}.")  # Print the success message
+            print(f"After the discount, the total comes to ${int(self.total)}.")
+            return self.total
         else:
             print("There is no discount to apply.")
+            return self.total
 
     def void_last_transaction(self):
         if self.items:
             last_item, last_price, last_quantity = self.items.pop()
             self.total -= last_price * last_quantity
-            return f"Voided the last transaction. Total: ${self.total}"
+            return self.total  # Return the updated total after voiding the last transaction
         else:
             return "There are no transactions to void."
 
@@ -43,7 +45,7 @@ class CashRegister:
         self.items = []
 
     def get_all_items(self):
-        return [item for item, _, _ in self.items]
+        return [item for item in self.items]  # Extract item names from tuples
 
     def get_all_items_including_multiples(self):
-        return [(item, quantity) for item, _, quantity in self.items]
+        return [f"{item} ({self.items.count(item)})" for item in set(self.items)]  # Count occurrences for multiples
