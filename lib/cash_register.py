@@ -21,11 +21,17 @@ class CashRegister:
 
     def void_last_transaction(self):
         if self.items:
-            last_item, last_price, last_quantity = self.items.pop()
-            self.total -= last_price * last_quantity
-            return self.total  # Return the updated total after voiding the last transaction
+            last_transaction = self.items.pop()  # Get the last transaction tuple
+            if len(last_transaction) == 2:  # Check if it has exactly two elements
+                last_item, last_price = last_transaction  # Unpack into item and price
+                self.total -= last_price  # Subtract the price of the last item from the total
+                return self.total  # Return the updated total after voiding the last transaction
+            else:
+                print("Error: Each transaction should have exactly 2 elements (item, price)")
         else:
-            return "There are no transactions to void."
+            print("There are no transactions to void.")
+
+
 
     def get_item_price(self, item):
         for i in range(len(self.items) - 1, -1, -1):
